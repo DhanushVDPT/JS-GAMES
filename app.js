@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img: './images/milkshake.jpg'
     },
     {
-        name: 'ice-cream',
+        name: 'milkshake',
         img: './images/milkshake.jpg'
     },
     {
@@ -64,8 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i=0; i<cardArray.length; i++) {
             var card = document.createElement('img');
             card.setAttribute('src', './images/blank.jpg');
+            card.setAttribute('width', '200px');
             card.setAttribute('data-id', i);
-            // card.addEventListener('click', flipcard)
+            card.addEventListener('click', flipcard)
             grid.appendChild(card);
         }
     }
@@ -75,17 +76,29 @@ document.addEventListener('DOMContentLoaded', () => {
         var cards = document.querySelectorAll('img') //gets all the images
         const optionOneId = cardsChosenId[0];
         const optionTwoId = cardsChosenId[1];
-        if(cardsChosen[0] === cardsChosen[1]) {
+        if(optionOneId == optionTwoId) {
+            cards[optionOneId].setAttribute('src', './images/blank.jpg');
+            cards[optionTwoId].setAttribute('src', './images/blank.jpg');
+            alert('You have clicked the same image!')
+            //this block checks if the user clicked on the same card twice
+        }
+        else if(cardsChosen[0] === cardsChosen[1]) {
             alert('You found a match');
             cards[optionOneId].setAttribute('src', './images/white.png')
-            cards[optionTwoId].setAttribute('src', 'images/white.png')
+            cards[optionTwoId].setAttribute('src', './images/white.png')
             //this block checked if the names of the chosen cards matched and replaced the matched cards with white blank image if they matched
+
+            cards[optionOneId].removeEventListener('click', flipcard);
+            cards[optionTwoId].removeEventListener('click', flipcard);
+            //removes the event listener for these matched cards
+
             cardsWon.push(cardsChosen);
             //the cards matched are pushed to cardswon array
         }
         else{
             //if the cards don't match, they should be flipped back to play again
-            cards[optionOneId].setAttribute('src', './gitimages/blank.jpg');
+            cards[optionOneId].setAttribute('src', './images/blank.jpg');
+            cards[optionTwoId].setAttribute('src', './images/blank.jpg');
             alert('Sorry, try again');
         }
         //even if cards match or don't match, the chosen cards array and chosen cards id array must be cleared for playing again
@@ -103,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var cardId = this.getAttribute('data-id'); //this will get the ID number of card which was clicked
         cardsChosen.push(cardArray[cardId].name); //this will push the clicked card's name into the array of selected cards
         cardsChosenId.push(cardId); //this will push the id of clicked card into selected card's id array
-        this.setAttribute('src', cardArray); //the clicked card is being added the image it should display by flipping
+        this.setAttribute('src', cardArray[cardId].img); //the clicked card is being added the image it should display by flipping
         //now we don't want more than two cards to be selected at a time, so let's do that:
         if(cardsChosen.length === 2) {
             setTimeout(checkForMatch, 500) //set timeout will give buffer time. match is checked after 500ms
